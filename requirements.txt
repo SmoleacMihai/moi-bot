@@ -1,0 +1,3 @@
+python-telegram-bot
+load_dotenv
+instaloader
