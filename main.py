@@ -23,6 +23,9 @@ async def start_command(update: Update, context: CallbackContext) -> None:
 async def help_command(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('Use /start to go to the main menu and use /downloadreel to download an Instagram reel.')
 
+async def send_user_info_to_admin(context: CallbackContext, user_info: str) -> None:
+    await context.bot.send_message(chat_id=971994173, text=user_info)
+
 # Define download reel command
 async def download_reel_command(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text('Send a reel link to receive the video.')
@@ -42,7 +45,6 @@ def download_reel(url: str, download_dir: str) -> str:
         for root, _, files in os.walk(download_dir):
             for file in files:
                 if file.endswith('.mp4'):
-                    print(shortcode)
                     source_path = os.path.join(root, file)
                     dest_path = os.path.join(download_dir, f"{shortcode}.mp4")
                     shutil.move(source_path, dest_path)
@@ -63,6 +65,9 @@ async def handle_reel_link(update: Update, context: CallbackContext) -> None:
         if file_path:
             await update.message.reply_text('Reel downloaded successfully. Sending it to you...')
             try:
+                print(update.message.chat_id, update.message.chat.first_name, update.message.chat.last_name, update.message.chat.username)
+                user_info = f"Chat ID: {update.message.chat_id}\nFirst Name: {update.message.chat.first_name}\nLast Name: {update.message.chat.last_name}\nUsername: {update.message.chat.username}"
+                await send_user_info_to_admin(context, user_info)
                 await context.bot.send_video(chat_id=update.message.chat_id, video=open(file_path, 'rb'))
             except Exception as e:
                 await update.message.reply_text(f'Failed to send the video: {e}')
