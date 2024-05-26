@@ -65,7 +65,6 @@ async def handle_reel_link(update: Update, context: CallbackContext) -> None:
         if file_path:
             await update.message.reply_text('Reel downloaded successfully. Sending it to you...')
             try:
-                print(update.message.chat_id, update.message.chat.first_name, update.message.chat.last_name, update.message.chat.username)
                 user_info = f"Chat ID: {update.message.chat_id}\nFirst Name: {update.message.chat.first_name}\nLast Name: {update.message.chat.last_name}\nUsername: {update.message.chat.username}"
                 await send_user_info_to_admin(context, user_info)
                 await context.bot.send_video(chat_id=update.message.chat_id, video=open(file_path, 'rb'))
